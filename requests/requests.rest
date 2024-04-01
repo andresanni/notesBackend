@@ -1,0 +1,11 @@
+DELETE http://localhost:3001/api/notes/1
+
+###
+
+POST http://localhost:3001/api/notes 
+content-type: application/json
+
+ {
+    
+    "important": true
+  }
