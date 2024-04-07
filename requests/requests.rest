@@ -1,4 +1,4 @@
-DELETE http://localhost:3001/api/notes/1
+DELETE http://localhost:3001/api/notes/6612aac6bd6535baa14e3ef0
 
 ###
 
@@ -6,6 +6,24 @@ POST http://localhost:3001/api/notes
 content-type: application/json
 
  {
-    
+    "content": "Primera nota desde el endpoint",
+    "important": true
+  }
+
+###
+
+GET http://localhost:3001/api/notes 
+
+###
+
+GET http://localhost:3001/api/notes/6612aac6bd6535baa14e3ef0
+
+###
+
+PUT http://localhost:3001/api/notes/6612ce29a596979be26d4e4e 
+content-type: application/json
+
+ {
+    "content": "Primera nota Modificada desde el endpoint",
     "important": true
   }
