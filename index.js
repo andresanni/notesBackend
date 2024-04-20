@@ -37,7 +37,7 @@ app.get('/api/notes/:id', (req, res, next) => {
     });
 });
 
-app.post('/api/notes', (req, res) => {
+app.post('/api/notes', (req, res, next) => {
   const body = req.body;
 
   if (!body.content) {
@@ -49,7 +49,10 @@ app.post('/api/notes', (req, res) => {
     important: Boolean(body.important) || false,
   });
 
-  note.save().then((savedNote) => res.status(201).json(savedNote));
+  note
+    .save()
+    .then((savedNote) => res.status(201).json(savedNote))
+    .catch((error) => next(error));
 });
 
 app.delete('/api/notes/:id', (req, res, next) => {
@@ -66,24 +69,20 @@ app.delete('/api/notes/:id', (req, res, next) => {
 app.put('/api/notes/:id', (req, res, next) => {
   const { id } = req.params;
 
-  const note = {
-    content: req.body.content,
-    important: req.body.important,
-  };
+  const { content, important } = req.body;
 
-  Note.findByIdAndUpdate(id, note, { new: true })
+  Note.findByIdAndUpdate(id, {content, important}, { new: true, runValidators: true, context:'query'})
     .then((updatedNote) => res.status(200).json(updatedNote))
     .catch((error) => next(error));
 });
 
 app.use((error, req, res, next) => {
   console.log(error.name);
-  console.log(error);
 
   if (error.name === 'CastError') {
     res.status(400).end();
-  } else {
-    res.status(500).end();
+  } else if (error.name === 'ValidationError') {
+    res.status(400).json({ error: error.message });
   }
 });
 

@@ -6,7 +6,7 @@ POST http://localhost:3001/api/notes
 content-type: application/json
 
  {
-    "content": "Primera nota desde el endpoint",
+    "content": "Pri",
     "important": true
   }
 
