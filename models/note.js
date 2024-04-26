@@ -23,4 +23,4 @@ noteSchema.set('toJSON', {
 //Crear clase del modelo
 const Note = model('Note', noteSchema);
 
-module.exports = { Note };
+module.exports =  Note ;
