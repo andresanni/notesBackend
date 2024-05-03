@@ -10,10 +10,19 @@ const api = supertest(app);
 
 beforeEach(async () => {
   await Note.deleteMany({});
-  let noteObject = new Note(helper.initialNotes[0]);
-  await noteObject.save();
-  noteObject = new Note(helper.initialNotes[1]);
-  await noteObject.save();
+
+  //Solucion con Promise.all, funciona pero no ejecuta promesas en un orden especifico
+  //en este caso no molesta 
+  // const notesObject = helper.initialNotes.map((note) => new Note(note));
+  // const notesPromisesArray = notesObject.map((note) => note.save());
+  // await Promise.all(notesPromisesArray);
+
+  //Si quisieramos cuidar el orden, recurrimos a for...of
+  const notesObject = helper.initialNotes.map(note => new Note(note));
+
+  for(let note of notesObject){
+    await note.save();
+  } 
 });
 
 test('notes are returned as json', async () => {
@@ -75,19 +84,17 @@ test('note without content is not added', async () => {
   assert.strictEqual(notesAtEnd.length, helper.initialNotes.length);
 });
 
-test ('a note can be deleted', async()=>{
-
+test('a note can be deleted', async () => {
   const notesAtStart = await helper.notesInDb();
   const noteToDelete = notesAtStart[0];
 
   await api.delete(`/api/notes/${noteToDelete.id}`).expect(204);
 
   const notesAtEnd = await helper.notesInDb();
-  const contents = notesAtEnd.map(note=> note.content);
+  const contents = notesAtEnd.map((note) => note.content);
 
-  assert.strictEqual(notesAtStart.length -1 , notesAtEnd.length );
+  assert.strictEqual(notesAtStart.length - 1, notesAtEnd.length);
   assert(!contents.includes(noteToDelete.content));
-
 });
 
 after(async () => {

@@ -6,24 +6,20 @@ notesRouter.get('/', async (req, res) => {
   res.json(notes);
 });
 
-notesRouter.get('/:id', async (req, res, next) => {
+notesRouter.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  try {
-    const note = await Note.findById(id);
+  const note = await Note.findById(id);
 
-    if (note) {
-      res.json(note);
-    } else {
-      res.status(404);
-      res.json({ error: `id ${id} doesn't exist` });
-    }
-  } catch (exception) {
-    next(exception);
+  if (note) {
+    res.json(note);
+  } else {
+    res.status(404);
+    res.json({ error: `id ${id} doesn't exist` });
   }
 });
 
-notesRouter.post('/', async (req, res, next) => {
+notesRouter.post('/', async (req, res) => {
   const body = req.body;
 
   const note = new Note({
@@ -31,23 +27,15 @@ notesRouter.post('/', async (req, res, next) => {
     important: body.important || false,
   });
 
-  try {
-    const savedNote = await note.save();
-    res.status(201).json(savedNote);
-  } catch (exception) {
-    next(exception);
-  }
+  const savedNote = await note.save();
+  res.status(201).json(savedNote);
 });
 
-notesRouter.delete('/:id', async (req, res, next) => {
+notesRouter.delete('/:id', async (req, res) => {
   const { id } = req.params;
 
-  try {
-    await Note.findByIdAndDelete(id);
-    res.status(204).end();
-  } catch (exception) {
-    next(exception);
-  }
+  await Note.findByIdAndDelete(id);
+  res.status(204).end();
 });
 
 notesRouter.put('/:id', (req, res, next) => {
