@@ -6,14 +6,15 @@ POST http://localhost:3001/api/notes
 content-type: application/json
 
  {
-    "content": "Pri",
-    "important": true
+    "content": "Segunda nota con usuario",
+    "important": false,
+    "userId": "6638d2a9f43a5e0d0442def7"
   }
 
 ###
 
 GET http://localhost:3001/api/notes 
-
+ 
 ###
 
 GET http://localhost:3001/api/notes/6612aac6bd6535baa14e3ef0

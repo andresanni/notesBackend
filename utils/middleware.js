@@ -7,6 +7,8 @@ const errorHandler = (error, req, res, next) => {
     res.status(400).send({ error: 'malformatted id' });
   } else if (error.name === 'ValidationError') {
     res.status(400).json({ error: error.message });
+  } else if(error.name ==='MongoServerError'){
+    res.status(400).json({error: 'expected `username` to be unique'});
   }
 
   next(error);

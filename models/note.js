@@ -5,6 +5,7 @@ const noteSchema = new Schema(
   {
     content: { type: String, minLength: 5, required: true },
     important: Boolean,
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
   },
   {
     versionKey: false,
@@ -23,4 +24,4 @@ noteSchema.set('toJSON', {
 //Crear clase del modelo
 const Note = model('Note', noteSchema);
 
-module.exports =  Note;
+module.exports = Note;
