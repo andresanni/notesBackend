@@ -34,24 +34,13 @@ const getTokenFrom = (request) => {
 notesRouter.post('/', async (req, res) => {
   const body = req.body;
 
-  //Extraigo el payload decodificando el token
   const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
 
-
-  //Verificar si el payload tiene el campo id
-  if(!decodedToken.id){
-    return response.status(401).json({error: 'invalid token'});
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'invalid token' });
   }
 
-  //El usuario que antes venia en el body ahora lo extraigo del payload del token
   const user = await User.findById(decodedToken.id);
-
-  console.log('-----');
-  console.log(decodedToken);
-  console.log('-----');
-  console.log(user);
-  console.log('-----');
-
 
   const note = new Note({
     content: body.content,
