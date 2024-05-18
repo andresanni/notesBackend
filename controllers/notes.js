@@ -1,5 +1,4 @@
 const notesRouter = require('express').Router();
-const { response } = require('express');
 const Note = require('../models/note');
 const User = require('../models/user');
 const jwt = require('jsonwebtoken');
@@ -37,7 +36,7 @@ notesRouter.post('/', async (req, res) => {
   const decodedToken = jwt.verify(getTokenFrom(req), process.env.SECRET);
 
   if (!decodedToken.id) {
-    return response.status(401).json({ error: 'invalid token' });
+    return res.status(401).json({ error: 'invalid token' });
   }
 
   const user = await User.findById(decodedToken.id);
