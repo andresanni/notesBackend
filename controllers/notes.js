@@ -52,7 +52,12 @@ notesRouter.post('/', async (req, res) => {
   user.notes = user.notes.concat(savedNote._id);
   await user.save();
 
-  res.status(201).json(savedNote);
+  const populatedNote = await Note.findById(savedNote._id).populate('user', {
+    username: 1,
+    name: 1,
+  });
+
+  res.status(201).json(populatedNote);
 });
 
 notesRouter.delete('/:id', async (req, res) => {
@@ -62,18 +67,19 @@ notesRouter.delete('/:id', async (req, res) => {
   res.status(204).end();
 });
 
-notesRouter.put('/:id', (req, res, next) => {
+notesRouter.put('/:id', async (req, res, next) => {
   const { id } = req.params;
-
   const { content, important } = req.body;
 
-  Note.findByIdAndUpdate(
+  const updatedNote = await Note.findByIdAndUpdate(
     id,
     { content, important },
     { new: true, runValidators: true, context: 'query' }
-  )
-    .then((updatedNote) => res.json(updatedNote))
-    .catch((error) => next(error));
+  ).populate('user', { username: 1, name: 1 });
+
+  if (updatedNote) {
+    res.json(updatedNote);
+  }
 });
 
 module.exports = notesRouter;
