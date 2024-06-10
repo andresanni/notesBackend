@@ -7,7 +7,7 @@ const average = (array) => {
     return acum + curr;
   }, 0);
   
-  return array.length===0 ? 0 : total / array.length;
+  return array.length === 0 ? 0 : total / array.length;
 };
 
 module.exports = { reverse, average };

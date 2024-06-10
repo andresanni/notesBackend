@@ -1,11 +1,11 @@
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require("mongoose");
 
 //Crear schema
 const noteSchema = new Schema(
   {
     content: { type: String, minLength: 5, required: true },
     important: Boolean,
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
   },
   {
     versionKey: false,
@@ -13,15 +13,23 @@ const noteSchema = new Schema(
 );
 
 //Sobreescribir toJSON del schema para quitar campo V
-noteSchema.set('toJSON', {
+noteSchema.set("toJSON", {
   transform: (document, returnedObject) => {
     returnedObject.id = returnedObject._id.toString();
     delete returnedObject._id;
     delete returnedObject.__v;
+
+    if (!returnedObject.hasOwnProperty("user")) {
+      returnedObject.user = {
+        username: "unknown",
+        name: "unknown",
+        id: "unknown",
+      };
+    }
   },
 });
 
 //Crear clase del modelo
-const Note = model('Note', noteSchema);
+const Note = model("Note", noteSchema);
 
 module.exports = Note;
